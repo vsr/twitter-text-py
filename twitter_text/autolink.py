@@ -79,12 +79,12 @@ class Autolink(object):
             if match.group(4) is not None and not kwargs.get('suppress_lists', False):
                 # this link is a list
                 _list = u'%s%s' % (match.group(3), match.group(4))
-                _link = u'%s%s<a class="%s" href="%s%s"%s>%s</a>' % ( match.group(1), match.group(2), ' '.join( [ kwargs.get('url_class', ''), kwargs.get('list_class', '') ] ), kwargs.get('list_url_base'), _list.lower(), extra_html, _list )
+                _link = u'%s%s<a href="%s%s">%s</a>' % ( match.group(1), match.group(2), kwargs.get('list_url_base'), _list.lower(), _list )
                 del(_list)
             else:
                 # this is a screen name
                 _username = match.group(3)
-                _link = u'%s<a class="%s" href="%s%s"%s>%s%s</a>' % ( match.group(1), ' '.join( [ kwargs.get('url_class'), kwargs.get('username_class', '') ] ), kwargs.get('username_url_base', ''), _username, extra_html, match.group(2), _username )
+                _link = u'%s<a href="%s%s">%s%s</a>' % ( match.group(1), kwargs.get('username_url_base', ''), _username, match.group(2), _username )
                 del(_username)
             self.text = self.text.replace(match.group(0), _link)
             del(_link)
@@ -121,7 +121,7 @@ class Autolink(object):
     
         matches = REGEXEN['auto_link_hashtags'].finditer(self.text)
         for match in matches:
-            _link = u'%s<a href="%s%s" title="#%s" class="%s"%s>%s%s</a>' % ( match.group(1), kwargs.get('hashtag_url_base'), match.group(3), match.group(3), ' '.join( [ kwargs.get('url_class', ''), kwargs.get('hashtag_class', '') ] ), extra_html, match.group(2), match.group(3) )
+            _link = u'%s<a href="%s%s">%s%s</a>' % ( match.group(1), kwargs.get('hashtag_url_base'), match.group(3), match.group(2), match.group(3) )
             self.text = self.text.replace(match.group(0), _link)
 
         if self.parent and hasattr(self.parent, 'text'):
@@ -169,7 +169,7 @@ class Autolink(object):
             display_url = full_url
             if len(display_url) > 30:
                 display_url = u'%s…' % display_url[0:30]
-            _link = '%s<a href="%s"%s>%s</a>' % ( match.group(1), full_url, html_attrs, display_url )
+            _link = '%s<a href="%s">%s</a>' % ( match.group(1), full_url, display_url )
             self.text = self.text.replace(match.group(0), _link)
             del(_link)
             del(full_url)
